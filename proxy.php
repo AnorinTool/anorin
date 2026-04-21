@@ -19,25 +19,22 @@ curl_setopt_array($ch, [
 ]);
 
 $response = curl_exec($ch);
-$err = curl_error($ch);
 curl_close($ch);
 
-// lỗi request
-if (!$response) {
+/*
+  CHỈ TRẢ DATA, KHÔNG DEBUG, KHÔNG URL, KHÔNG BASE
+*/
+$data = json_decode($response, true);
+
+if ($data === null) {
     echo json_encode([
-        "status" => "error",
-        "message" => "cannot load menu",
-        "debug" => $err
-    ], JSON_UNESCAPED_UNICODE);
+        "status" => "error"
+    ]);
     exit;
 }
 
-/*
-  CHUẨN HÓA OUTPUT JSON
-  - không trả raw text trực tiếp
-*/
 echo json_encode([
     "status" => "success",
     "mode" => $mode,
-    "menu" => $response
-], JSON_UNESCAPED_UNICODE);
+    "data" => $data
+]);
